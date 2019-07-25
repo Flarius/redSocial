@@ -1,19 +1,20 @@
 //este archivo sirve para colocar funciones y configurar express
-const path    = require ('path');
-const exphbs  = require ('express-handlebars');
-const morgan  = require ('morgan');
-const multer  = require ('multer');
-const express = require ('express');
-const routes  = require ('../routes/index');
+const path = require('path');
+const errorHandler = require('errorhandler');
+const exphbs = require('express-handlebars');
+const morgan = require('morgan');
+const multer = require('multer');
+const express = require('express');
+const routes = require('../routes');
 
 module.exports = app => {
    //settings
    app.set('port', process.env.PORT || 3000);
-   app.set('views', path.join(__dirname, 'views'));
+   app.set('views', path.join(__dirname, '../views'));
    app.engine('.hbs', exphbs({
       defaultLayout: 'main',
-      partialsDir: path.join(app.get('views'), 'partials'),
-      layoutsDir: path.join(app.get('views', 'layouts')),
+      partialsDir: path.join(app.get('views'),'partials'),
+      layoutsDir: path.join(app.get('views'), 'layouts'),
       extname: '.hbs',
       helpers: require('./helpers'),
    }));
@@ -31,7 +32,13 @@ module.exports = app => {
 
    //routes
    routes(app);
-   //errorhandlers
+
+   //static files
+   app.use('/public', express.static(path.join(__dirname, '../public')));
+   //errorhandlers 
+   if ('development' === app.get('dev')){
+      app.use(errorHandler);
+   }
 
    return app;
 }
