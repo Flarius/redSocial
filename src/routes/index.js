@@ -8,7 +8,7 @@ module.exports = app => {
    app.get     ('/images/:image_id', image.index);
    app.post    ('/images', image.create);
    app.post    ('/images/:image_id/like', image.like);
-   app.post    ('/images/:image_id/', image.comment);
+   app.post    ('/images/:image_id/comment', image.comment);
    app.delete  ('/images/:image_id', image.delete);
    app.use     (router);
 }
